@@ -53,8 +53,8 @@ app.get('/weather', (request, response) => {
     let jsonInfo = require('./data/darksky.json');
     let weatherDates = [];
     weatherDates = jsonInfo.daily.data.map((extractedData) => ({
-      summary: extractedData.summary,
-      time: extractedData.time
+      forecast: extractedData.summary,
+      time: ((extractedData.time)*1000).toDateString()
     }));
 
     // for (let index = 0; index < jsonInfo.daily.data.length; index++) {
@@ -69,7 +69,7 @@ app.get('/weather', (request, response) => {
   }
 });
 
-function WeatherObject(forecast, time) {
-  this.forecast = forecast;
-  this.time = new Date(time * 1000).toDateString();
-}
+// function WeatherObject(forecast, time) {
+//   this.forecast = forecast;
+//   this.time = new Date(time * 1000).toDateString();
+// }
