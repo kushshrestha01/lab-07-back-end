@@ -2,12 +2,34 @@
 
 # Data formatting
 
-Number and name of feature: ________________________________
+Number and name of feature: Data formatting-1
 
-Estimate of time needed to complete: _____
+Estimate of time needed to complete: 0.5HR
 
-Start time: _____
+Start time: 0900
 
-Finish time: _____
+Finish time:1000
 
-Actual time needed to complete: _____
+Actual time needed to complete: 1hr
+
+Number and name of feature: Data formatting-1
+
+Estimate of time needed to complete: 0.5HR
+
+Start time: 0900
+
+Finish time:1000
+
+Actual time needed to complete: 1hr
+
+
+Number and name of feature: Data formatting-1
+
+Estimate of time needed to complete: 0.5HR
+
+Start time: 0900
+
+Finish time:1000
+
+Actual time needed to complete: 1hr
+
