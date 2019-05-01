@@ -55,25 +55,28 @@ function Location(query, res) {
   this.longitude = res.results[0].geometry.location.lng;
 }
 
-
 app.get('/weather', (request, response) => {
   try {
-    let jsonInfo = require('./data/darksky.json');
-    let weatherDates = [];
-    weatherDates = jsonInfo.daily.data.map((extractedData) => {
-      let forecast= extractedData.summary;
-      let time =  extractedData.time;
-      return new WeatherObject(forecast, time);
-    });
-
-
-
-    response.send(weatherDates);
-  } catch (error) {
+    let weather;
+    const queryData = request.query.data.latitude;
+    const queryData2 = request.query.data.longitude;
+    let weatherURL = `https://api.darksky.net/forecast/${process.env.WEATHER_API_KEY}/${queryData},${queryData2}`;
+    superagent.get(weatherURL)
+      .end( (err, weatherResponse) => {
+        weather = weatherResponse.body.daily.data.map(element =>{
+          return new WeatherObject(element.summary, element.time);
+        });
+        response.send(weather);
+        console.log(weather);
+      });
+    console.log('here', weather);
+  }
+  catch(error) {
     console.error(error);
-    response.status(500).send('Status: 500. So sorry, something went wrong');
+    response.status(500).send('Status: 500. So sorry, something went wrong.');
   }
 });
+
 
 function WeatherObject(forecast, time) {
   this.forecast = forecast;
