@@ -52,10 +52,15 @@ app.get('/weather', (request, response) => {
   try {
     let jsonInfo = require('./data/darksky.json');
     let weatherDates = [];
-    for (let index = 0; index < jsonInfo.daily.data.length; index++) {
-      let tempObj = new WeatherObject(jsonInfo.daily.data[index].summary, jsonInfo.daily.data[index].time);
-      weatherDates.push(tempObj);
-    }
+    weatherDates = jsonInfo.daily.data.map((extractedData) => ({
+      summary: extractedData.summary,
+      time: extractedData.time
+    }));
+
+    // for (let index = 0; index < jsonInfo.daily.data.length; index++) {
+    //   let tempObj = new WeatherObject(jsonInfo.daily.data[index].summary, jsonInfo.daily.data[index].time);
+    //   weatherDates.push(tempObj);
+    // }
 
     response.send(weatherDates);
   } catch (error) {
