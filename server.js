@@ -6,6 +6,8 @@ const app = express();
 const cors = require('cors');
 app.use(cors());
 
+const superagent = require('superagent');
+
 //enviroment variable defined in .env as 3000
 const PORT = process.env.PORT || 3000;
 
@@ -32,14 +34,43 @@ app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));
 
 app.get('/location', (request, response) => {
   try {
-    let jsonInfo = require('./data/geo.json');
-    let someLocation = new GeoObject(jsonInfo.results[0].address_components[0].long_name, jsonInfo.results[0].formatted_address, jsonInfo.results[0].geometry.location.lat, jsonInfo.results[0].geometry.location.lng);
-    response.send(someLocation);
-  } catch (error) {
+    const queryData = request.query.data;
+    let geocodeURL = `https://maps.googleapis.com/maps/api/geocode/json?address=${queryData}&key=${process.env.GEOCODE_API_KEY}`;
+    superagent.get(geocodeURL)
+      .end( (err, googleMapsApiResponse) => {
+        const location = new Location(queryData, googleMapsApiResponse.body);
+        response.send(location);
+      });
+  }
+  catch(error) {
     console.error(error);
-    response.status(500).send('Status: 500. So sorry, something went wrong');
+    response.status(500).send('Status: 500. So sorry, something went wrong.');
   }
 });
+
+
+function Location(query, res) {
+  this.search_query = query;
+  this.formatted_query = res.results[0].formatted_address;
+  this.latitude = res.results[0].geometry.location.lat;
+  this.longitude = res.results[0].geometry.location.lng;
+}
+
+// app.get('/location', (request, response) => {
+//   try {
+//   //   const queryDate = request.query.data;
+//   //   let geocodeURL = `https://maps.googleapis.com/maps/api/geocode/json?address=${queryData}&key=${process.env.GEOCODE_API_KEY}`;
+//   //  superagent.get(geocodeURL)
+
+
+//     let jsonInfo = require('./data/geo.json');
+//     let someLocation = new GeoObject(jsonInfo.results[0].address_components[0].long_name, jsonInfo.results[0].formatted_address, jsonInfo.results[0].geometry.location.lat, jsonInfo.results[0].geometry.location.lng);
+//     response.send(someLocation);
+//   } catch (error) {
+//     console.error(error);
+//     response.status(500).send('Status: 500. So sorry, something went wrong');
+//   }
+// });
 
 function GeoObject(query, address, latitude, longitude) {
   this.formatted_query = query;
