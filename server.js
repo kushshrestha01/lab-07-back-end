@@ -11,7 +11,6 @@ const superagent = require('superagent');
 //enviroment variable defined in .env as 3000
 const PORT = process.env.PORT || 3000;
 
-
 //if front end is in same directory, front end is in public file and following line is needed
 //app.use(express.static('./public'));
 
