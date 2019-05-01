@@ -54,7 +54,7 @@ app.get('/weather', (request, response) => {
     let weatherDates = [];
     weatherDates = jsonInfo.daily.data.map((extractedData) => ({
       forecast: extractedData.summary,
-      time: ((extractedData.time)*1000).toDateString()
+      time: extractedData.time
     }));
 
     // for (let index = 0; index < jsonInfo.daily.data.length; index++) {
