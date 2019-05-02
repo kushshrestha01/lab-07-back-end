@@ -34,7 +34,7 @@ app.get('/location', (request, response) => {
   try {
     const queryData = request.query.data;
     let geocodeURL = `https://maps.googleapis.com/maps/api/geocode/json?address=${queryData}&key=${process.env.GEOCODE_API_KEY}`;
-    
+
     superagent.get(geocodeURL)
       .end( (err, googleMapsApiResponse) => {
         const location = new Location(queryData, googleMapsApiResponse.body);
@@ -82,6 +82,44 @@ function WeatherObject(forecast, time) {
   this.forecast = forecast;
   this.time = new Date(time * 1000).toDateString();
 }
+
+
+//Lets start eventbrite here
+
+//Following codes have been referenced to class lecture from Michelle.
+app.get('/events', getEvents);
+
+function getEvents(request, response){
+  try {
+    const url = `https://www.eventbriteapi.com/v3/events/search?location.address=${request.query.data.formatted_query}`;
+
+    superagent.get(url)
+      .set('Authorization', `Bearer ${process.env.EVENTBRITE_API_KEY}`)
+      .then(result =>{
+        const events = result.body.events.map(eventData =>{
+          const event = new EventObject(eventData);
+          return event;
+        });
+        response.send(events);
+      });
+
+  }
+  catch (error) {
+    console.error(error);
+    response.status(500).send('Status: 500. So sorry, something went wrong.');
+  }
+}
+
+
+
+function EventObject(event) {
+  this.link = event.url;
+  this.name = event.name.text;
+  this.event_date = new Date('');
+  this.summary = event.summary;
+}
+
+//Eventbrite end here
 
 
 app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));
